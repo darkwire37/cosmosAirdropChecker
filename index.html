@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 <!--Airdrop icons created by Freepik - Flaticon-->
-<html>
-    <head>
-        <div class="header">
 
-            <h1 class="title">AirdropFinder</h1>
-            <a href="https://github.com/darkwire37/cosmosAirdropChecker" class="about">GitHub</a>
-        </div>
-        
-        <title>AirdropFinder</title>
-        <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<html>
+
+<head>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <title>AirdropFinder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+</head>
     
-        <style>
-            .addressBox
+
+<body>
+    <div class="header">
+        <img src="assets/logo.png" width="50" height="50" style="padding-top: 8px;" />
+        <h1 class="title">AirdropFinder</h1>
+        <a href="https://github.com/darkwire37/cosmosAirdropChecker" target="_blank" class="about">GitHub</a>
+        <a class="donateCosmos">Like the project? Buy me a coffee: cosmos164nnhgzu9mv49ufkus6wlhvcx4c5aqlm8ajj3j</a>
+    </div>
+    
+    
+    
+    <style>
+        .addressBox
             {
                 padding: 0 30px;
                 font-size: 18px;
@@ -23,6 +31,7 @@
                 border: 1px solid darken(white, 30%);
                 border-radius: 20px 0px 0px 20px;
                 border: none;
+                font-family: courier;
             }
             
             .submit
@@ -34,6 +43,10 @@
                 width: 150px;
                 height: 80px;
                 border: none;
+                font-size: 18px;
+                font-weight: 500;
+                background-color: #1f1f1f;
+                color: #FFFFFF;
             }
             .title
             {
@@ -45,6 +58,15 @@
                 text-shadow: 5px 5px 10px rgba(black, .5);
             }
             .about
+            {
+                padding-top: 18px;
+                padding-right: 25px;
+                text-align: right;
+                float: right;
+                color: #FFFFFF;
+                text-decoration: none;
+            }
+            .donateCosmos
             {
                 padding-top: 18px;
                 padding-right: 25px;
@@ -73,59 +95,69 @@
             {
                 padding-top:50px;
                 position: relative;
-                text-align: center;
+                text-align: left;
                 color: #FFFFFF;
                 justify-content: center;
                 display: flex;
+                font-size: 170%;
             }
             
             body
             {
                 background-color: #292929;
             }
-        </style>
-<script>
-    const findMoney= async ()=>{
-        var address;
-        address = document.getElementById("address").value;
-        var request = "localhost:5000/airdrop?address=" + address;
-        var outputFormat = "<h2 class='output'>";
-        
-        try{
-            const response= await fetch(request, 
-            {
-                method: "GET", 
-            }
-            );
-        
-            if(response.ok){
-                  const jsonResponse= await response.json();
-                  var json = JSON.stringify(jsonResponse);
-                  const obj = JSON.parse(json);
-                  for (const key in obj)
-                  {
-                    outputFormat = outputFormat + `${obj[key].name}` + ": " + `${obj[key].bal}` + "<br>";
-                  }
-                  outputFormat = outputFormat + "</h3>";
-                  output.innerHTML = outputFormat;
-                }
-            }catch(err){
-                console.log("Name :"+ err.name);
-                console.log("Message :"+ err.message);
-                }
-    };
-</script>
-</head>
-    <body>
-
-        <div class="centered">
-            <input id="address" class="addressBox" type=“text” placeholder="cosmos1234...">
-            <button class="submit" type="button" onclick="findMoney();">
-                Submit
-            </button>
-        </div>
-        <div id="output">
             
-        </div>
-    </body>
+            td
+            {
+                padding-right: 50px;
+            }
+    </style>
+    <script>
+        function precise(x) {
+            return x.toPrecision(2);
+        }
+        const findMoney= async ()=>{
+            var address;
+            address = document.getElementById("address").value;
+            var request = "localhost:5000/airdrop?address=" + address;
+            var outputFormat = "<table align='center'><tr><th>Project</th><th>Amount</th></tr>";
+            let tempBal;
+            
+            try{
+                const response= await fetch(request, 
+                {
+                    method: "GET", 
+                }
+                );
+            
+                if(response.ok){
+                      const jsonResponse= await response.json();
+                      var json = JSON.stringify(jsonResponse);
+                      const obj = JSON.parse(json);
+                      for (const key in obj)
+                      {
+                          tempBal = Number(`${obj[key].bal}`)
+                        outputFormat = outputFormat + "<tr><td>" + `${obj[key].name}` + "</td><td>" + tempBal.toFixed(2) + "</td></tr>";
+                      }
+                      outputFormat = outputFormat + "</table>";
+                      console.log(outputFormat);
+                      output.innerHTML = outputFormat;
+                    }
+                }
+                catch(err){
+                    console.log("Name :"+ err.name);
+                    console.log("Message :"+ err.message);
+                }
+        };
+    </script>
+
+    <div class="centered">
+        <input id="address" class="addressBox" type=“text” placeholder="cosmos1234...">
+        <button class="submit" type="button" onclick="findMoney();">Find Airdrops</button>
+    </div>
+    <div class ="output" id="output">
+
+    </div>
+</body>
+
 </html>
